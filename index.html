@@ -5,55 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CDramaHub VIP ONLY</title>
     <style>
-        /* PROTEKSI: ANTI SCREENSHOT & RECORD (LAYAR JADI HITAM KALO DIREKAM) */
-        @media only screen and (max-width: 600px) {
-            body { filter: brightness(1); }
-            body:active { filter: brightness(0); } /* Layar gelap kalo disentuh aneh-aneh */
-        }
+        /* TEMA WARNA CHINA: MERAH DARAH & EMAS */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #1a0000; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ffd700; text-align: center; }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; color: gold; text-align: center; }
-        #gate { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-        #main-frame { display: none; width: 100%; height: 100%; border: none; }
-        input { padding: 15px; border-radius: 8px; border: 2px solid gold; background: #111; color: #fff; width: 280px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        button { padding: 15px 40px; background: gold; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        #gate { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle, #4a0000 0%, #1a0000 100%); }
+        
+        .logo { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #ffd700; margin-bottom: 20px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); object-fit: cover; }
+
+        h2 { letter-spacing: 3px; margin-bottom: 5px; text-shadow: 2px 2px 4px #000; color: #ff3333; }
+        p { font-size: 14px; margin-bottom: 20px; color: #ffd700; opacity: 0.8; }
+
+        /* WARNA USERNAME CHINA STYLE */
+        input { padding: 15px; border-radius: 8px; border: 2px solid #ff3333; background: #2a0000; color: #ffcc00; width: 280px; font-size: 16px; margin-bottom: 15px; outline: none; text-align: center; font-weight: bold; }
+        input::placeholder { color: #800000; font-weight: normal; }
+
+        button { padding: 15px 40px; background: linear-gradient(to bottom, #ff3333, #800000); color: white; border: 1px solid #ffd700; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        button:active { transform: scale(0.95); }
+
+        /* ANIMASI LOADING */
+        #loading-area { display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 215, 0, 0.1); border-top: 5px solid #ff3333; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-style: italic; color: #ffd700; font-size: 18px; }
+
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="gate">
-        <h2 style="letter-spacing: 5px;">CDramaHub VIP</h2>
-        <input type="text" id="user_tele" placeholder="MASUKKAN USERNAME..." autocomplete="off">
-        <button onclick="unlock()">VERIFIKASI & MASUK</button>
+        <img src="https://i.ibb.co.com/G4J3nVBp/1001428751.jpg" class="logo" alt="Logo">
+        
+        <div id="form-ui">
+            <h2>CDRAMAHUB VIP</h2>
+            <p>Sistem Verifikasi Kekaisaran</p>
+            <input type="text" id="user_tele" placeholder="ID USERNAME TELEGRAM..." autocomplete="off">
+            <br>
+            <button onclick="unlock()">VERIFIKASI & MASUK</button>
+        </div>
+
+        <div id="loading-area">
+            <div class="spinner"></div>
+            <div class="loading-text">Memeriksa Status VIP...</div>
+        </div>
     </div>
 
-    <iframe id="main-frame" src="https://drama.sansekai.my.id/" allow="autoplay; fullscreen"></iframe>
-
     <script>
-        // PROTEKSI: CEK WEB APP TELEGRAM
-        var isTelegram = window.navigator.userAgent.includes('Telegram');
-        if (!isTelegram) {
-            alert("AKSES DIBLOKIR! WAJIB LEWAT BOT TELEGRAM.");
-            window.location.href = "https://t.me/CDramaHub_bot"; 
+        // PROTEKSI: CEK TELEGRAM WEB APP
+        if (!window.navigator.userAgent.includes('Telegram')) {
+            document.body.innerHTML = "<div style='padding-top:100px;'><h2>AKSES DITOLAK!</h2><p>Wajib dibuka melalui Bot Telegram.</p></div>";
+            setTimeout(() => { window.location.href = "https://t.me/CDramaHub_bot"; }, 2000);
         }
 
         function unlock() {
             var user = document.getElementById('user_tele').value;
-            // Di sini nanti bisa ditambahin API check ke Bot buat mastiin dia beneran VIP
-            if(user.length > 2) {
-                document.getElementById('gate').style.display = "none";
-                document.getElementById('main-frame').style.display = "block";
-                window.history.pushState(null, "", "/system-locked-vip");
-            } else {
-                alert("USERNAME SALAH ATAU BELUM DAFTAR!");
+            if(user.length < 3) {
+                alert("Masukkan Username yang Benar!");
+                return;
             }
-        }
 
-        // ANTI INSPECT & COPY
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
-            if (e.ctrlKey && e.keyCode == 85) return false;
-        };
+            // SEMBUNYIIN FORM, TAMPILIN LOADING
+            document.getElementById('form-ui').style.display = 'none';
+            document.getElementById('loading-area').style.display = 'flex';
+
+            // LOADING 3 DETIK BIAR KEREN
+            setTimeout(function() {
+                window.location.href = "https://drama.sansekai.my.id/";
+            }, 3500);
+        }
     </script>
 </body>
 </html>
