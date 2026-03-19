@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CDramaHub VIP ONLY</title>
+    <style>
+        /* PROTEKSI: ANTI SCREENSHOT & RECORD (LAYAR JADI HITAM KALO DIREKAM) */
+        @media only screen and (max-width: 600px) {
+            body { filter: brightness(1); }
+            body:active { filter: brightness(0); } /* Layar gelap kalo disentuh aneh-aneh */
+        }
+        
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: sans-serif; color: gold; text-align: center; }
+        #gate { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        #main-frame { display: none; width: 100%; height: 100%; border: none; }
+        input { padding: 15px; border-radius: 8px; border: 2px solid gold; background: #111; color: #fff; width: 280px; font-size: 16px; margin-bottom: 15px; outline: none; }
+        button { padding: 15px 40px; background: gold; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="gate">
+        <h2 style="letter-spacing: 5px;">CDramaHub VIP</h2>
+        <input type="text" id="user_tele" placeholder="MASUKKAN USERNAME..." autocomplete="off">
+        <button onclick="unlock()">VERIFIKASI & MASUK</button>
+    </div>
+
+    <iframe id="main-frame" src="https://drama.sansekai.my.id/" allow="autoplay; fullscreen"></iframe>
+
+    <script>
+        // PROTEKSI: CEK WEB APP TELEGRAM
+        var isTelegram = window.navigator.userAgent.includes('Telegram');
+        if (!isTelegram) {
+            alert("AKSES DIBLOKIR! WAJIB LEWAT BOT TELEGRAM.");
+            window.location.href = "https://t.me/CDramaHub_bot"; 
+        }
+
+        function unlock() {
+            var user = document.getElementById('user_tele').value;
+            // Di sini nanti bisa ditambahin API check ke Bot buat mastiin dia beneran VIP
+            if(user.length > 2) {
+                document.getElementById('gate').style.display = "none";
+                document.getElementById('main-frame').style.display = "block";
+                window.history.pushState(null, "", "/system-locked-vip");
+            } else {
+                alert("USERNAME SALAH ATAU BELUM DAFTAR!");
+            }
+        }
+
+        // ANTI INSPECT & COPY
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
+            if (e.ctrlKey && e.keyCode == 85) return false;
+        };
+    </script>
+</body>
+</html>
