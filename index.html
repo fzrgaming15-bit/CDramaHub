@@ -3,74 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CDramaHub VIP ONLY</title>
+    <title>CDramaHub VIP</title>
     <style>
-        /* TEMA WARNA CHINA: MERAH DARAH & EMAS */
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #1a0000; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ffd700; text-align: center; }
-        
-        #gate { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle, #4a0000 0%, #1a0000 100%); }
-        
-        .logo { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #ffd700; margin-bottom: 20px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); object-fit: cover; }
-
-        h2 { letter-spacing: 3px; margin-bottom: 5px; text-shadow: 2px 2px 4px #000; color: #ff3333; }
-        p { font-size: 14px; margin-bottom: 20px; color: #ffd700; opacity: 0.8; }
-
-        /* WARNA USERNAME CHINA STYLE */
-        input { padding: 15px; border-radius: 8px; border: 2px solid #ff3333; background: #2a0000; color: #ffcc00; width: 280px; font-size: 16px; margin-bottom: 15px; outline: none; text-align: center; font-weight: bold; }
-        input::placeholder { color: #800000; font-weight: normal; }
-
-        button { padding: 15px 40px; background: linear-gradient(to bottom, #ff3333, #800000); color: white; border: 1px solid #ffd700; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        button:active { transform: scale(0.95); }
-
-        /* ANIMASI LOADING */
-        #loading-area { display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 215, 0, 0.1); border-top: 5px solid #ff3333; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #1a0000; color: gold; text-align: center; font-family: sans-serif; overflow: hidden; }
+        #gate { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle, #4a0000 0%, #000 100%); }
+        .logo { width: 110px; border-radius: 50%; border: 3px solid gold; margin-bottom: 15px; box-shadow: 0 0 15px gold; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,215,0,0.1); border-top: 5px solid #ff3333; border-radius: 50%; animation: spin 1s linear infinite; display: none; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text { font-style: italic; color: #ffd700; font-size: 18px; }
-
+        button { padding: 15px 40px; background: linear-gradient(#ff3333, #800000); color: white; border: 1px solid gold; border-radius: 8px; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
+        #main-content { display: none; width: 100%; height: 100%; }
+        iframe { width: 100%; height: 100%; border: none; }
+        /* ANTI-SS: ITEMIN LAYAR PAS DISENTUH */
+        body:active { filter: brightness(0); }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <div id="gate">
-        <img src="https://i.ibb.co.com/G4J3nVBp/1001428751.jpg" class="logo" alt="Logo">
-        
-        <div id="form-ui">
-            <h2>CDRAMAHUB VIP</h2>
-            <p>Sistem Verifikasi Kekaisaran</p>
-            <input type="text" id="user_tele" placeholder="ID USERNAME TELEGRAM..." autocomplete="off">
-            <br>
-            <button onclick="unlock()">VERIFIKASI & MASUK</button>
-        </div>
-
-        <div id="loading-area">
-            <div class="spinner"></div>
-            <div class="loading-text">Memeriksa Status VIP...</div>
+        <img src="https://i.ibb.co.com/G4J3nVBp/1001428751.jpg" class="logo">
+        <h2 id="msg" style="color: #ff3333;">CDramaHub VIP</h2>
+        <div id="loading" class="spinner"></div>
+        <div id="ui">
+            <p id="info">Mengecek Lisensi Kaisar...</p>
+            <button onclick="prosesVerifikasi()">VERIFIKASI & MASUK</button>
         </div>
     </div>
 
-    <script>
-        // PROTEKSI: CEK TELEGRAM WEB APP
-        if (!window.navigator.userAgent.includes('Telegram')) {
-            document.body.innerHTML = "<div style='padding-top:100px;'><h2>AKSES DITOLAK!</h2><p>Wajib dibuka melalui Bot Telegram.</p></div>";
-            setTimeout(() => { window.location.href = "https://t.me/CDramaHub_bot"; }, 2000);
-        }
+    <div id="main-content">
+        <iframe id="drama-frame" src=""></iframe>
+    </div>
 
-        function unlock() {
-            var user = document.getElementById('user_tele').value;
-            if(user.length < 3) {
-                alert("Masukkan Username yang Benar!");
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const sisaWaktu = parseInt(urlParams.get('exp')) || 0;
+
+        function prosesVerifikasi() {
+            if (sisaWaktu <= 0) {
+                alert("❌ AKSES DITOLAK! VIP Habis atau Ilegal.");
+                window.location.href = "https://t.me/CDramaHub_bot";
                 return;
             }
 
-            // SEMBUNYIIN FORM, TAMPILIN LOADING
-            document.getElementById('form-ui').style.display = 'none';
-            document.getElementById('loading-area').style.display = 'flex';
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('msg').innerText = "MEMERIKSA DATABASE...";
 
-            // LOADING 3 DETIK BIAR KEREN
-            setTimeout(function() {
-                window.location.href = "https://drama.sansekai.my.id/";
-            }, 3500);
+            setTimeout(() => {
+                document.getElementById('gate').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('drama-frame').src = "https://drama.sansekai.my.id/";
+
+                // SISTEM TENDANG OTOMATIS
+                let timerRemaining = sisaWaktu;
+                let countdown = setInterval(() => {
+                    timerRemaining--;
+                    
+                    if (timerRemaining === 60) {
+                        alert("⚠️ WADUH! VIP sisa 1 menit. Buruan perpanjang cuma 2k!");
+                    }
+
+                    if (timerRemaining <= 0) {
+                        clearInterval(countdown);
+                        alert("❌ WAKTU VIP HABIS! Kamu akan dikeluarkan otomatis.");
+                        window.location.href = "https://t.me/CDramaHub_bot";
+                    }
+                }, 1000);
+            }, 3000);
         }
     </script>
 </body>
